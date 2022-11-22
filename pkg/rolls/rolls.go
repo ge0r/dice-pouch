@@ -7,13 +7,14 @@ import (
 )
 
 type Roll struct {
-	Name string
-	Expr string
-	Res  map[string]int
-	Sum  int
+	Name     string
+	Expr     string
+	Summands []Summand
+	Sum      int
 }
 
 var ErrInvalidExpr = errors.New("roll: invalid expression")
+var ErrNoSummands = errors.New("roll: no summands")
 
 func New(name string, expr string) *Roll {
 	return &Roll{
@@ -22,7 +23,7 @@ func New(name string, expr string) *Roll {
 	}
 }
 
-func (r *Roll) Parse() ([]Summand, error) {
+func (r *Roll) Parse() error {
 	// Parse() treats all spaces as "+"
 	// So we need to make sure that there are no "+" left
 	expr := strings.ReplaceAll(r.Expr, "+", " ")
@@ -41,6 +42,10 @@ func (r *Roll) Parse() ([]Summand, error) {
 		nums := strings.Split(word, "-")
 
 		for _, num := range nums {
+			if num == "" {
+				continue
+			}
+
 			isDie := strings.Contains(num, "d")
 			params := strings.Split(num, "d")
 
@@ -48,24 +53,30 @@ func (r *Roll) Parse() ([]Summand, error) {
 			var err1, err2 error
 
 			if len(params) > 2 {
-				return nil, ErrInvalidExpr
+				return ErrInvalidExpr
 			} else if len(params) > 1 {
-				// The first parameter is a multiplier and the second is a die
-				multiplier, err1 = strconv.Atoi(params[0])
-				val, err2 = strconv.Atoi(params[1])
-				if err1 != nil || err2 != nil {
-					return nil, ErrInvalidExpr
+				if params[0] != "" {
+					// The first parameter is a multiplier and the second is a die
+					multiplier, err1 = strconv.Atoi(params[0])
+					val, err2 = strconv.Atoi(params[1])
+				} else {
+					// There is no multiplier and the second parameter is a die
+					multiplier = 1
+					val, err2 = strconv.Atoi(params[1])
 				}
 			} else {
-				// There is only one parameter, either modifier or die
+				// There is only one parameter and it is a modifier
 				multiplier = 1
 				val, err2 = strconv.Atoi(params[0])
 			}
+			if err1 != nil || err2 != nil {
+				return ErrInvalidExpr
+			}
 			for i := 0; i < multiplier; i++ {
 				if isDie {
-					res = append(res, &Dice{val, isNegative})
+					res = append(res, &Dice{Sides: val, IsNegative: isNegative})
 				} else {
-					res = append(res, &Modifier{val, isNegative})
+					res = append(res, &Modifier{Value: val, IsNegative: isNegative})
 				}
 			}
 			// All nums after the initial one are negative
@@ -73,5 +84,18 @@ func (r *Roll) Parse() ([]Summand, error) {
 		}
 	}
 
-	return res, nil
+	r.Summands = res
+	return nil
+}
+
+func (r *Roll) roll() error {
+	if len(r.Summands) == 0 {
+		return ErrNoSummands
+	}
+
+	for _, summand := range r.Summands {
+		r.Sum += summand.YieldRes()
+	}
+
+	return nil
 }

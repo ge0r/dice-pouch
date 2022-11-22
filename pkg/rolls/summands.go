@@ -3,31 +3,37 @@ package rolls
 import "math/rand"
 
 type Summand interface {
-	YieldNum() int
+	YieldRes() int
 }
 
 type Dice struct {
 	Sides      int
-	isNegative bool
+	IsNegative bool
+	Result     int
 }
 
 type Modifier struct {
 	Value      int
-	isNegative bool
+	IsNegative bool
 }
 
-func (d *Dice) YieldNum() int {
-	res := rand.Int()%d.Sides + 1
+func (d *Dice) YieldRes() int {
+	// Only calculate result the first time
+	if d.Result == 0 {
+		res := rand.Int()%d.Sides + 1
 
-	if d.isNegative {
-		return -res
-	} else {
-		return res
+		if d.IsNegative {
+			d.Result = -res
+		} else {
+			d.Result = res
+		}
 	}
+
+	return d.Result
 }
 
-func (m *Modifier) YieldNum() int {
-	if m.isNegative {
+func (m *Modifier) YieldRes() int {
+	if m.IsNegative {
 		return -m.Value
 	} else {
 		return m.Value
