@@ -88,7 +88,7 @@ func (r *Roll) Parse() error {
 	return nil
 }
 
-func (r *Roll) roll() error {
+func (r *Roll) Roll() error {
 	if len(r.Summands) == 0 {
 		return ErrNoSummands
 	}
