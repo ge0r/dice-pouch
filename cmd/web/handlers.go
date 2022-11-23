@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -20,7 +19,7 @@ func (app *application) roll(w http.ResponseWriter, r *http.Request) {
 	rollExpr := r.URL.Query()
 	fmt.Println(rollExpr)
 
-	rollsRes := []rolls.Roll{}
+	result := []rolls.Roll{}
 
 	if len(rollExpr) == 0 {
 		app.clientError(w, http.StatusBadRequest)
@@ -40,13 +39,13 @@ func (app *application) roll(w http.ResponseWriter, r *http.Request) {
 			app.clientError(w, http.StatusBadRequest)
 			return
 		}
-		rollsRes = append(rollsRes, *roll)
+		result = append(result, *roll)
 	}
 
-	b, err := json.Marshal(rollsRes)
+	json, err := app.resultJson(result)
 	if err != nil {
 		app.serverError(w, err)
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(b)
+	w.Write(json)
 }
