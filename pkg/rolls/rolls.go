@@ -23,7 +23,7 @@ func New(name string, expr string) *Roll {
 	}
 }
 
-func (r *Roll) Parse() error {
+func (r *Roll) parse() error {
 	// Parse() treats all spaces as "+"
 	// So we need to make sure that there are no "+" left
 	expr := strings.ReplaceAll(r.Expr, "+", " ")
@@ -88,7 +88,12 @@ func (r *Roll) Parse() error {
 	return nil
 }
 
-func (r *Roll) Roll() error {
+func (r *Roll) Execute() error {
+	err := r.parse()
+	if err != nil {
+		return err
+	}
+
 	if len(r.Summands) == 0 {
 		return ErrNoSummands
 	}

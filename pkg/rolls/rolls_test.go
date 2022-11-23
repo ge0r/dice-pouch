@@ -128,7 +128,7 @@ func TestParse(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			roll := New("test", tt.expr)
-			err := roll.Parse()
+			err := roll.parse()
 			// try if (err==nil) == tt.wantErr
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)

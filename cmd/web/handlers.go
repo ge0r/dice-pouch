@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -16,25 +17,36 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) roll(w http.ResponseWriter, r *http.Request) {
-	diceRoll := r.URL.Query()
-	fmt.Println(diceRoll)
+	rollExpr := r.URL.Query()
+	fmt.Println(rollExpr)
 
-	if len(diceRoll) == 0 {
+	rollsRes := []rolls.Roll{}
+
+	if len(rollExpr) == 0 {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
 
-	for rollID, expr := range diceRoll {
+	for rollID, expr := range rollExpr {
 		// Cannot have the same rollID twice
 		if len(expr) > 1 {
-			app.clientError(w, 400)
+			app.clientError(w, http.StatusBadRequest)
+			return
 		}
 
 		roll := rolls.New(rollID, expr[0])
-		err := roll.Parse()
-		err = roll.Roll()
-		fmt.Println(err)
-		fmt.Println(roll.Sum)
+		err := roll.Execute()
+		if err != nil {
+			app.clientError(w, http.StatusBadRequest)
+			return
+		}
+		rollsRes = append(rollsRes, *roll)
 	}
-	fmt.Fprintf(w, "No dice yet, but here is your dice roll: %s", diceRoll)
+
+	b, err := json.Marshal(rollsRes)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(b)
 }
