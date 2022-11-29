@@ -23,7 +23,7 @@ We get the results in json, like so:
 Here we see the results of any dice rolled and any modifiers.
 Sum is the final result of the roll, here it's `17`, where all of the above are added together.
 
-##### Add negative effects
+#### Add negative effects
 Here is a different example:
 ```
 http://127.0.0.1/roll?r1=2d6-1-d4
@@ -33,7 +33,7 @@ We rolled two d6 with a modifier of -1 and also deduct from the result one d4. T
 [[{"sum":4},{"d6":2},{"d6":5},{"modifier":-1},{"d4":-2}]]
 ```
 
-##### Multiple rolls
+#### Multiple rolls
 You could also have multiple rolls:
 ```
 127.0.0.1/roll?r1=d20+5&r2=2d6+3+d4&r3=3d12-2d4
@@ -53,7 +53,7 @@ You can quickly get the result of your attack and bonus attack with a roll like 
 Here `r1` and `r2` are the attack roll and damage roll for the first hand. Similarly, `r3` and `r4` are the attack and damage rolls for the second hand.
 I usually bookmark the roll so that it is one click away. A second bookmark might go to my ranged attack roll.
 
-#### Suggestion for DMs
+### Suggestion for DMs
 DMs might benefit from this by organizing a number of attacks from different enemies as bookmarks. 
 This eliminates the added complexity of looking up attacks during battle, and helps maintain momentum in combat.
 
