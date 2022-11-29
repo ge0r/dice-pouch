@@ -21,7 +21,7 @@ We get the results in json, like so:
 [[{"sum":17},{"d20":12},{"modifier":5}]]
 ```
 Here we see the results of any dice rolled and any modifiers.
-Sum is the final result of the roll (here it is `17`), where all of the above are added together.
+Sum is the final result of the roll, here it's `17`, where all of the above are added together.
 
 ##### Add negative effects
 Here is a different example:
@@ -39,21 +39,22 @@ You could also have multiple rolls:
 127.0.0.1/roll?r1=d20+5&r2=2d6+3+d4&r3=3d12-2d4
 ```
 Here we have three rolls:
-* the first roll (r1) is a d20 with a modifier of 5
-* the second roll (r2) is two d6 with a modifier of 3 plus a d4
-* the third roll (r3) is three d12 minus two d4
+* the first roll `r1` is a d20 with a modifier of 5
+* the second roll `r2` is two d6 with a modifier of 3 plus a d4
+* the third roll `r3` is three d12 minus two d4
 
 ## Suggested use
-Let's you play DnD and you are usually attacking with your two shortswords (two weapon fighting).
+Let's say you play DnD and you are usually attacking with your two shortswords (two weapon fighting).
 You can quickly get the result of your attack and bonus attack with a roll like that:
 ```
 127.0.0.1/roll?r1=d20+5&r2=d6+3&r3=d20&r4=d6+3
 ```
 
-Here r1 and r2 are the attack roll and damage roll for the first hand. Similarly, r3 and r4 are the attack and damage rolls for the second hand.
-I just bookmark the roll so that it is one click away. A second bookmark might go to my ranged attack roll.
+Here `r1` and `r2` are the attack roll and damage roll for the first hand. Similarly, `r3` and `r4` are the attack and damage rolls for the second hand.
+I usually bookmark the roll so that it is one click away. A second bookmark might go to my ranged attack roll.
 
+#### Suggestion for DMs
 DMs might benefit from this by organizing a number of attacks from different enemies as bookmarks. 
-This eliminates the added complexity of searching the details of each monster's attack during the battle. It also helps combat keep it's momentum, as you are swift to announce the results of each attack and immersion is not broken from the small delays of reading the attack block, rolling the dice and adding modifiers, for every enemy's attack(s).
+This eliminates the added complexity of looking up attacks during battle, and helps maintain momentum in combat.
 
-What I usually do is create a bookmark folder for each planned encounter. Inside each encounter folder I have a list of `dice-pouch/roll` bookmarks, with each bookmark rolling for the attacks of one enemy.
+What I usually do when DMing is create a bookmark folder for each planned encounter. Inside each encounter folder I have a list of `dice-pouch/roll` bookmarks, each bookmark corresponding to rolls of one enemy.
